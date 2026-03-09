@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>NEWCLAIR NHW | Neighbourhood Watch Malmesbury</title>
+    <meta name="description" content="Newclair Neighbourhood Watch – officially accredited community safety organisation in New Claire, Malmesbury, Western Cape.">
+    <meta name="theme-color" content="#c8102e">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Newclair NHW">
+
+    <!-- SVG Tab Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23c8102e'/%3E%3Cpath d='M32 8 L54 18 L54 36 Q54 50 32 58 Q10 50 10 36 L10 18 Z' fill='none' stroke='%23f5c518' stroke-width='3'/%3E%3Cpath d='M32 8 L54 18 L54 36 Q54 50 32 58 Q10 50 10 36 L10 18 Z' fill='white' opacity='0.12'/%3E%3Ctext x='32' y='40' font-family='Arial Black' font-weight='900' font-size='15' fill='white' text-anchor='middle'%3ENHW%3C/text%3E%3C/svg%3E">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@400;600;700;900&family=Barlow+Condensed:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+
+    <style>
+        :root {
+            --red: #c8102e;
+            --red-dark: #a00d25;
+            --black: #0a0a0a;
+            --off-black: #111;
+            --yellow: #f5c518;
+            --yellow-dark: #d4a800;
+            --white: #ffffff;
+            --gray: #f2f2f2;
+        }
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; }
+        body { font-family: 'Barlow', sans-serif; background: var(--white); color: var(--black); overflow-x: hidden; }
+
+        /* REVEAL ANIMATIONS */
+        .reveal { opacity: 0; transform: translateY(32px); transition: opacity 0.65s ease, transform 0.65s ease; }
+        .reveal.visible { opacity: 1; transform: translateY(0); }
+        .reveal-left { opacity: 0; transform: translateX(-40px); transition: opacity 0.65s ease, transform 0.65s ease; }
+        .reveal-left.visible { opacity: 1; transform: translateX(0); }
+        .reveal-right { opacity: 0; transform: translateX(40px); transition: opacity 0.65s ease, transform 0.65s ease; }
+        .reveal-right.visible { opacity: 1; transform: translateX(0); }
+
+        @keyframes fadeUp { from { opacity:0; transform:translateY(30px); } to { opacity:1; transform:translateY(0); } }
+        @keyframes pulse-ring { 0% { transform:scale(1); opacity:1; } 100% { transform:scale(1.7); opacity:0; } }
+        @keyframes float { 0%,100% { transform:translateY(0); } 50% { transform:translateY(-6px); } }
+
+        /* UTILITY */
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+        .section-tag { font-family:'Barlow Condensed',sans-serif; font-size:12px; letter-spacing:4px; text-transform:uppercase; color:var(--red); font-weight:700; display:block; }
+        .display-heading { font-family:'Bebas Neue',sans-serif; letter-spacing:2px; line-height:0.95; }
+
+        /* ADD TO HOME SCREEN */
+        #a2hs-banner { display:none; position:fixed; bottom:0; left:0; right:0; background:var(--black); border-top:3px solid var(--yellow); color:white; padding:14px 20px; z-index:9000; align-items:center; gap:16px; flex-wrap:wrap; }
+        #a2hs-banner.show { display:flex; animation:fadeUp 0.3s ease; }
+        .a2hs-icon { width:44px; height:44px; background:var(--red); border-radius:10px; display:flex; align-items:center; justify-content:center; font-family:'Bebas Neue',sans-serif; font-size:12px; color:white; letter-spacing:1px; flex-shrink:0; border:2px solid var(--yellow); }
+        .a2hs-text { flex:1; }
+        .a2hs-text strong { display:block; font-size:14px; font-weight:700; }
+        .a2hs-text span { font-size:12px; color:rgba(255,255,255,0.55); }
+        .a2hs-btn { background:var(--yellow); color:var(--black); border:none; padding:10px 20px; font-family:'Barlow Condensed',sans-serif; font-weight:900; font-size:14px; letter-spacing:1px; border-radius:4px; cursor:pointer; white-space:nowrap; }
+        .a2hs-close { background:none; border:none; color:rgba(255,255,255,0.4); font-size:20px; cursor:pointer; padding:4px; }
+
+        /* PANIC BUTTON */
+        #panic-btn { position:fixed; bottom:90px; right:24px; z-index:8000; width:68px; height:68px; background:var(--red); border:none; border-radius:50%; cursor:pointer; display:flex; flex-direction:column; align-items:center; justify-content:center; box-shadow:0 4px 20px rgba(200,16,46,0.55); animation:float 3s ease-in-out infinite; transition:transform 0.2s,background 0.2s; }
+        #panic-btn:hover { transform:scale(1.1); background:var(--red-dark); }
+        #panic-btn::before, #panic-btn::after { content:''; position:absolute; inset:0; border-radius:50%; border:2px solid rgba(200,16,46,0.6); animation:pulse-ring 2.2s ease-out infinite; }
+        #panic-btn::after { animation-delay:1.1s; }
+        #panic-btn i { font-size:22px; color:white; }
+        #panic-btn span { font-family:'Barlow Condensed',sans-serif; font-size:9px; font-weight:900; color:white; letter-spacing:1px; margin-top:1px; }
+
+        /* PANIC MODAL */
+        #panic-modal { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.88); z-index:9999; align-items:center; justify-content:center; padding:20px; }
+        #panic-modal.open { display:flex; }
+        .panic-box { background:var(--black); border:3px solid var(--red); border-radius:8px; padding:40px; max-width:480px; width:100%; text-align:center; animation:fadeUp 0.35s ease; }
+        .panic-icon { width:80px; height:80px; background:var(--red); border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 20px; font-size:36px; color:white; }
+        .panic-box h2 { font-family:'Bebas Neue',sans-serif; font-size:40px; color:var(--red); letter-spacing:3px; margin-bottom:8px; }
+        .panic-box p { color:rgba(255,255,255,0.65); font-size:15px; line-height:1.6; margin-bottom:28px; }
+        .panic-actions { display:flex; flex-direction:column; gap:12px; }
+        .panic-action-btn { display:flex; align-items:center; gap:14px; padding:16px 20px; border-radius:6px; text-decoration:none; font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:17px; letter-spacing:1px; transition:transform 0.2s, filter 0.2s; }
+        .panic-action-btn:hover { transform:translateY(-2px); filter:brightness(1.1); }
+        .panic-action-btn.whatsapp { background:#25D366; color:white; }
+        .panic-action-btn.call { background:var(--red); color:white; }
+        .panic-action-btn.sms  { background:#2563eb; color:white; }
+        .panic-action-btn i { font-size:22px; }
+        .panic-close { margin-top:20px; background:none; border:1px solid rgba(255,255,255,0.15); color:rgba(255,255,255,0.4); padding:10px 24px; border-radius:4px; cursor:pointer; font-family:'Barlow Condensed',sans-serif; font-size:14px; letter-spacing:2px; transition:all 0.2s; }
+        .panic-close:hover { border-color:white; color:white; }
+
+        /* ALERT BANNER */
+        .alert-banner { background:var(--red); color:white; text-align:center; padding:10px 24px; font-size:13px; font-weight:700; letter-spacing:1px; font-family:'Barlow Condensed',sans-serif; }
+
+        /* NAVBAR */
+        nav { background:var(--black); position:sticky; top:0; z-index:1000; border-bottom:3px solid var(--red); transition:box-shadow 0.3s; }
+        nav.scrolled { box-shadow:0 4px 30px rgba(200,16,46,0.25); }
+        .nav-inner { display:flex; align-items:center; justify-content:space-between; padding:12px 24px; max-width:1200px; margin:0 auto; gap:20px; }
+        .nav-logo { display:flex; align-items:center; gap:12px; text-decoration:none; flex-shrink:0; }
+        .logo-badge { width:46px; height:46px; background:var(--red); border-radius:50%; display:flex; align-items:center; justify-content:center; font-family:'Bebas Neue',sans-serif; font-size:13px; color:white; letter-spacing:1px; border:2px solid var(--yellow); transition:transform 0.3s; }
+        .nav-logo:hover .logo-badge { transform:rotate(12deg); }
+        .logo-text { color:white; }
+        .logo-text h1 { font-family:'Bebas Neue',sans-serif; font-size:22px; letter-spacing:3px; line-height:1; }
+        .logo-text p  { font-size:10px; color:var(--yellow); font-weight:700; letter-spacing:2px; font-family:'Barlow Condensed',sans-serif; }
+        .nav-links { display:flex; gap:4px; list-style:none; flex-wrap:nowrap; }
+        .nav-links a { color:rgba(255,255,255,0.7); text-decoration:none; font-size:11px; font-weight:700; letter-spacing:1.5px; font-family:'Barlow Condensed',sans-serif; padding:6px 9px; border-radius:4px; transition:all 0.2s; white-space:nowrap; }
+        .nav-links a:hover { color:var(--yellow); background:rgba(255,255,255,0.05); }
+        .nav-cta { background:var(--yellow); color:var(--black)!important; padding:8px 14px!important; border-radius:100px; font-weight:900!important; }
+        .nav-cta:hover { background:var(--yellow-dark)!important; }
+        .hamburger { display:none; background:none; border:none; color:white; font-size:24px; cursor:pointer; padding:4px; }
+        .mobile-menu { display:none; background:var(--off-black); border-top:1px solid rgba(255,255,255,0.1); }
+        .mobile-menu.open { display:block; animation:fadeUp 0.2s ease; }
+        .mobile-menu a { display:block; color:rgba(255,255,255,0.8); text-decoration:none; padding:14px 24px; font-family:'Barlow Condensed',sans-serif; font-weight:700; letter-spacing:2px; font-size:14px; border-bottom:1px solid rgba(255,255,255,0.06); transition:all 0.2s; }
+        .mobile-menu a:hover { color:var(--yellow); padding-left:32px; }
+
+        /* HERO */
+        .hero { background:var(--black); min-height:100vh; display:flex; align-items:center; position:relative; overflow:hidden; }
+        .hero-bg { position:absolute; inset:0; background-image:url('https://images.unsplash.com/photo-1449824913935-59a10b8d2000?auto=format&fit=crop&w=1920&q=80'); background-size:cover; background-position:center; opacity:0.22; transform:scale(1.05); transition:transform 8s ease; }
+        .hero-bg.loaded { transform:scale(1); }
+        .hero-pattern { position:absolute; inset:0; background-image: repeating-linear-gradient(45deg,transparent,transparent 40px,rgba(200,16,46,0.04) 40px,rgba(200,16,46,0.04) 41px), repeating-linear-gradient(-45deg,transparent,transparent 40px,rgba(200,16,46,0.04) 40px,rgba(200,16,46,0.04) 41px); }
+        .hero-red-bar { position:absolute; top:0; right:0; width:6px; height:100%; background:var(--red); }
+        .hero-content { position:relative; z-index:2; padding:80px 24px; max-width:1200px; margin:0 auto; width:100%; }
+        .hero-content > * { animation:fadeUp 0.7s ease forwards; opacity:0; }
+        .hero-content > *:nth-child(1) { animation-delay:0.1s; }
+        .hero-content > *:nth-child(2) { animation-delay:0.25s; }
+        .hero-content > *:nth-child(3) { animation-delay:0.4s; }
+        .hero-content > *:nth-child(4) { animation-delay:0.55s; }
+        .hero-content > *:nth-child(5) { animation-delay:0.7s; }
+        .hero-content > *:nth-child(6) { animation-delay:0.85s; }
+        .hero-accred { display:inline-flex; align-items:center; gap:14px; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.15); border-radius:100px; padding:10px 20px; margin-bottom:36px; backdrop-filter:blur(10px); }
+        .hero-accred img { height:30px; }
+        .hero-accred-text { font-size:11px; line-height:1.4; }
+        .hero-accred-text strong { color:var(--yellow); display:block; font-size:10px; letter-spacing:2px; }
+        .hero-accred-text span { color:rgba(255,255,255,0.65); }
+        .hero-title { font-family:'Bebas Neue',sans-serif; font-size:clamp(80px,16vw,180px); color:white; line-height:0.88; letter-spacing:4px; margin-bottom:8px; }
+        .hero-title .accent { color:var(--red); }
+        .hero-subtitle { font-family:'Barlow Condensed',sans-serif; font-size:clamp(16px,3vw,26px); color:rgba(255,255,255,0.45); letter-spacing:4px; text-transform:uppercase; margin-bottom:28px; }
+        .hero-tagline { font-size:clamp(16px,2.5vw,21px); color:rgba(255,255,255,0.75); max-width:480px; line-height:1.55; margin-bottom:44px; }
+        .hero-buttons { display:flex; gap:16px; flex-wrap:wrap; }
+        .btn-primary { background:var(--red); color:white; text-decoration:none; padding:18px 34px; font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:16px; letter-spacing:2px; border-radius:4px; display:inline-flex; align-items:center; gap:10px; transition:all 0.25s; }
+        .btn-primary:hover { background:var(--red-dark); transform:translateY(-2px); }
+        .btn-secondary { background:transparent; color:white; text-decoration:none; padding:18px 34px; font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:16px; letter-spacing:2px; border-radius:4px; border:2px solid rgba(255,255,255,0.3); display:inline-flex; align-items:center; gap:10px; transition:all 0.25s; }
+        .btn-secondary:hover { border-color:white; background:rgba(255,255,255,0.05); transform:translateY(-2px); }
+        .hero-stats { display:flex; gap:48px; margin-top:60px; padding-top:36px; border-top:1px solid rgba(255,255,255,0.1); flex-wrap:wrap; }
+        .stat-num { font-family:'Bebas Neue',sans-serif; font-size:52px; color:var(--yellow); line-height:1; }
+        .stat-label { font-size:11px; color:rgba(255,255,255,0.4); letter-spacing:2px; text-transform:uppercase; font-family:'Barlow Condensed',sans-serif; margin-top:4px; }
+
+        /* ABOUT */
+        #about { padding:100px 0; background:white; }
+        .about-grid { display:grid; grid-template-columns:1fr 1fr; gap:60px; align-items:start; }
+        .about-img { width:100%; height:240px; object-fit:cover; border-radius:4px; margin-bottom:28px; border-left:5px solid var(--red); }
+        .about-heading { font-size:clamp(52px,8vw,88px); margin-top:12px; margin-bottom:24px; }
+        .about-text { font-size:17px; line-height:1.8; color:#444; }
+        .about-text p + p { margin-top:16px; }
+        .about-right { background:var(--black); color:white; padding:48px; border-radius:4px; border-top:5px solid var(--red); }
+        .about-right h3 { font-family:'Bebas Neue',sans-serif; font-size:32px; letter-spacing:2px; color:var(--yellow); margin-bottom:24px; }
+        .aim-list, .benefit-list { list-style:none; }
+        .aim-list li, .benefit-list li { padding:10px 0; border-bottom:1px solid rgba(255,255,255,0.07); display:flex; gap:14px; font-size:15px; color:rgba(255,255,255,0.85); line-height:1.5; }
+        .aim-list li::before { content:'▸'; color:var(--red); flex-shrink:0; margin-top:1px; }
+        .benefit-list li::before { content:'✓'; color:var(--yellow); flex-shrink:0; margin-top:1px; font-weight:900; }
+        .divider { margin:28px 0; height:1px; background:rgba(255,255,255,0.1); }
+        .about-photo-strip { display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px; margin-top:60px; }
+        .about-photo-strip img { width:100%; height:180px; object-fit:cover; border-radius:4px; transition:transform 0.4s; }
+        .about-photo-strip img:hover { transform:scale(1.04); }
+        .about-photo-strip img:first-child  { border-top:4px solid var(--red); }
+        .about-photo-strip img:nth-child(2) { border-top:4px solid var(--yellow); margin-top:24px; }
+        .about-photo-strip img:last-child   { border-top:4px solid var(--black); }
+
+        /* ACCRED BAND */
+        .accred-band { background:var(--red); padding:24px 0; }
+        .accred-inner { display:flex; align-items:center; justify-content:center; gap:32px; flex-wrap:wrap; text-align:center; }
+        .accred-inner img { height:52px; filter:brightness(0) invert(1); }
+        .accred-text { color:white; }
+        .accred-text h3 { font-family:'Bebas Neue',sans-serif; font-size:28px; letter-spacing:3px; }
+        .accred-text p  { font-size:14px; opacity:0.85; }
+
+        /* TEAM */
+        #team { padding:100px 0; background:var(--gray); }
+        .team-grid { display:grid; grid-template-columns:1fr 1fr; gap:60px; align-items:center; }
+        .team-photo { width:100%; height:280px; object-fit:cover; border-radius:4px; margin-bottom:20px; border-top:5px solid var(--yellow); }
+        .team-number-bg { background:var(--black); padding:32px 48px; border-radius:4px; position:relative; overflow:hidden; border-left:6px solid var(--red); }
+        .team-number-bg::after { content:'NHW'; position:absolute; right:20px; bottom:-10px; font-family:'Bebas Neue',sans-serif; font-size:120px; color:rgba(255,255,255,0.03); letter-spacing:10px; }
+        .team-big-number { font-family:'Bebas Neue',sans-serif; font-size:clamp(120px,18vw,200px); color:var(--yellow); line-height:1; display:block; }
+        .team-number-label { font-family:'Barlow Condensed',sans-serif; color:rgba(255,255,255,0.45); font-size:13px; letter-spacing:4px; text-transform:uppercase; margin-top:-8px; }
+        .vest-feature { display:inline-flex; align-items:center; gap:12px; background:var(--yellow); padding:14px 24px; border-radius:4px; font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:15px; letter-spacing:1px; margin-top:20px; }
+        .team-info h2 { font-family:'Bebas Neue',sans-serif; font-size:clamp(40px,6vw,68px); margin:12px 0 20px; line-height:0.95; letter-spacing:2px; }
+        .team-info p  { font-size:17px; line-height:1.7; color:#555; margin-bottom:20px; }
+        .patrol-cards { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:24px; }
+        .patrol-card { background:white; padding:20px; border-radius:4px; border-top:3px solid var(--red); transition:transform 0.3s,box-shadow 0.3s; }
+        .patrol-card:hover { transform:translateY(-4px); box-shadow:0 8px 24px rgba(0,0,0,0.1); }
+        .patrol-card i  { color:var(--red); font-size:24px; margin-bottom:10px; }
+        .patrol-card h4 { font-family:'Barlow Condensed',sans-serif; font-size:16px; font-weight:700; letter-spacing:1px; margin-bottom:6px; }
+        .patrol-card p  { font-size:13px; color:#666; line-height:1.5; }
+
+        /* SERVICES */
+        #services { padding:100px 0; background:white; }
+        .services-header { text-align:center; margin-bottom:60px; }
+        .services-heading { font-size:clamp(44px,7vw,80px); margin:12px 0 16px; }
+        .services-sub { font-size:18px; color:#666; }
+        .services-cards { display:grid; grid-template-columns:1fr 1fr; gap:24px; max-width:760px; margin:0 auto; }
+        .service-card { padding:48px 40px; border-radius:4px; text-decoration:none; transition:all 0.3s; display:block; }
+        .service-card:hover { transform:translateY(-6px); }
+        .service-card.black { background:var(--black); color:white; border-bottom:4px solid var(--red); }
+        .service-card.red   { background:var(--red);   color:white; border-bottom:4px solid var(--black); }
+        .service-card i  { font-size:44px; margin-bottom:20px; display:block; }
+        .service-card.black i { color:var(--yellow); }
+        .service-card h4 { font-family:'Bebas Neue',sans-serif; font-size:26px; letter-spacing:2px; margin-bottom:12px; }
+        .service-card p  { font-size:14px; opacity:0.75; line-height:1.5; }
+
+        /* CODE OF CONDUCT */
+        #coc { padding:100px 0; background:var(--black); color:white; }
+        .coc-header { text-align:center; margin-bottom:60px; }
+        .coc-heading { font-size:clamp(40px,6vw,72px); color:var(--red); margin:12px 0; }
+        .coc-header p { color:rgba(255,255,255,0.55); font-size:16px; max-width:600px; margin:0 auto; line-height:1.6; }
+        .coc-grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:2px; }
+        .coc-block { background:rgba(255,255,255,0.04); padding:40px 32px; transition:background 0.3s,transform 0.3s; }
+        .coc-block:hover { background:rgba(255,255,255,0.08); transform:translateY(-2px); }
+        .coc-block-num { font-family:'Bebas Neue',sans-serif; font-size:60px; color:var(--red); opacity:0.3; line-height:1; margin-bottom:12px; }
+        .coc-block h4  { font-family:'Barlow Condensed',sans-serif; font-size:16px; font-weight:700; letter-spacing:2px; color:var(--yellow); margin-bottom:20px; text-transform:uppercase; }
+        .coc-block ol  { padding-left:20px; }
+        .coc-block li  { font-size:14px; color:rgba(255,255,255,0.7); line-height:1.6; margin-bottom:12px; }
+        .coc-warning { background:var(--red); padding:32px 40px; margin-top:2px; display:flex; align-items:center; gap:20px; }
+        .coc-warning i { font-size:32px; color:white; flex-shrink:0; }
+        .coc-warning p { color:white; font-size:15px; font-weight:600; line-height:1.5; }
+
+        /* WHATSAPP */
+        #whatsapp { padding:80px 0; background:var(--gray); }
+        .wa-header { text-align:center; margin-bottom:48px; }
+        .wa-heading { font-size:clamp(36px,6vw,68px); margin:12px 0 16px; }
+        .wa-sub { font-size:16px; color:#666; max-width:560px; margin:0 auto; }
+        .wa-layout { display:grid; grid-template-columns:220px 1fr; gap:40px; align-items:start; }
+        .wa-icon-card { background:#25D366; color:white; padding:32px 24px; border-radius:4px; text-align:center; position:sticky; top:90px; }
+        .wa-icon-card i  { font-size:60px; margin-bottom:12px; display:block; }
+        .wa-icon-card h3 { font-family:'Bebas Neue',sans-serif; font-size:22px; letter-spacing:2px; margin-bottom:8px; }
+        .wa-icon-card p  { font-size:13px; opacity:0.85; line-height:1.5; }
+        .wa-rules-grid { display:grid; grid-template-columns:1fr 1fr; gap:2px; background:rgba(0,0,0,0.06); border-radius:4px; overflow:hidden; }
+        .wa-rule { display:flex; gap:12px; padding:14px 16px; background:white; align-items:flex-start; transition:background 0.2s; }
+        .wa-rule:hover { background:#fff8f8; }
+        .wa-rule-num  { font-family:'Bebas Neue',sans-serif; font-size:24px; color:var(--red); line-height:1; flex-shrink:0; width:28px; }
+        .wa-rule-text { font-size:13px; color:#444; line-height:1.5; padding-top:3px; }
+
+        /* INITIATIVES */
+        #initiatives { padding:100px 0; background:var(--black); color:white; }
+        .init-header { text-align:center; margin-bottom:70px; }
+        .init-heading { font-size:clamp(40px,7vw,80px); margin:12px 0; }
+        .init-grid { display:grid; grid-template-columns:1fr 1fr; gap:48px; }
+        .signage-label { font-family:'Barlow Condensed',sans-serif; font-size:11px; letter-spacing:4px; color:var(--yellow); font-weight:700; margin-bottom:16px; text-transform:uppercase; }
+        .signage-block h3 { font-family:'Bebas Neue',sans-serif; font-size:44px; letter-spacing:2px; margin-bottom:20px; }
+        .signage-block p  { font-size:16px; color:rgba(255,255,255,0.65); line-height:1.7; margin-bottom:24px; }
+        .sign-preview { background:white; color:var(--black); padding:20px 24px; border-radius:4px; border-left:8px solid var(--red); display:flex; align-items:center; gap:16px; }
+        .sign-preview-logo { background:var(--black); color:white; padding:8px 12px; border-radius:4px; font-family:'Bebas Neue',sans-serif; font-size:20px; letter-spacing:2px; flex-shrink:0; }
+        .sign-preview-text h4 { font-family:'Barlow Condensed',sans-serif; font-size:16px; font-weight:700; }
+        .sign-preview-text p  { font-size:11px; color:#666; font-family:'Barlow Condensed',sans-serif; letter-spacing:1px; }
+        .muni-logo-row { display:flex; align-items:center; gap:14px; margin-bottom:24px; padding:20px 24px; background:rgba(255,255,255,0.05); border-radius:4px; }
+        .muni-logo-text h4 { font-family:'Bebas Neue',sans-serif; font-size:28px; letter-spacing:3px; line-height:1; }
+        .muni-logo-text p  { font-size:10px; letter-spacing:2px; color:rgba(255,255,255,0.4); font-family:'Barlow Condensed',sans-serif; }
+        .muni-block > p { font-size:15px; color:rgba(255,255,255,0.6); line-height:1.7; margin-bottom:28px; }
+        .muni-list { list-style:none; }
+        .muni-item { display:flex; gap:20px; padding:14px 0; border-bottom:1px solid rgba(255,255,255,0.07); align-items:flex-start; }
+        .muni-num  { font-family:'Bebas Neue',sans-serif; font-size:32px; color:var(--red); line-height:1; flex-shrink:0; width:36px; }
+        .muni-text { font-size:15px; color:rgba(255,255,255,0.75); line-height:1.5; padding-top:5px; }
+
+        /* CONCERNS */
+        .concerns-band { background:var(--red); padding:64px 0; margin-top:60px; }
+        .concerns-inner { max-width:1200px; margin:0 auto; padding:0 24px; display:grid; grid-template-columns:1fr 1fr; gap:48px; align-items:center; }
+        .concerns-text h3 { font-family:'Bebas Neue',sans-serif; font-size:52px; letter-spacing:2px; color:white; margin-bottom:16px; }
+        .concerns-text p  { font-size:17px; color:rgba(255,255,255,0.85); line-height:1.7; }
+        .concerns-channels { display:flex; gap:20px; justify-content:flex-end; flex-wrap:wrap; }
+        .channel-btn { display:inline-flex; align-items:center; gap:10px; padding:18px 28px; border-radius:4px; font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:16px; letter-spacing:1px; text-decoration:none; transition:transform 0.2s,box-shadow 0.2s; }
+        .channel-btn:hover { transform:translateY(-3px); box-shadow:0 8px 20px rgba(0,0,0,0.2); }
+        .channel-btn.fb { background:#1877f2; color:white; }
+
+        /* EMERGENCY */
+        #emergency { padding:100px 0; background:var(--black); }
+        .emergency-header { text-align:center; margin-bottom:60px; }
+        .emergency-heading { font-size:clamp(40px,7vw,76px); color:var(--red); margin:12px 0; }
+        .emergency-header p { color:rgba(255,255,255,0.45); font-size:16px; }
+        .emergency-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(255px,1fr)); gap:14px; }
+        .em-card { background:rgba(255,255,255,0.04); border-radius:4px; padding:20px 22px; border-left:4px solid var(--red); transition:background 0.25s,transform 0.25s; text-decoration:none; display:block; }
+        .em-card:hover { background:rgba(200,16,46,0.14); transform:translateY(-3px); }
+        .em-card-top { display:flex; align-items:center; gap:12px; margin-bottom:8px; }
+        .em-card-icon { width:38px; height:38px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:15px; flex-shrink:0; }
+        .em-card-icon.police   { background:#1a3a6b; color:#7fa7e8; }
+        .em-card-icon.medical  { background:#1a4a1a; color:#6fca6f; }
+        .em-card-icon.fire     { background:#4a1a00; color:#f97316; }
+        .em-card-icon.crime    { background:#3a1a4a; color:#c084fc; }
+        .em-card-icon.security { background:#2a2a00; color:var(--yellow); }
+        .em-card-name { font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:15px; letter-spacing:1px; color:white; line-height:1.2; }
+        .em-card-cat  { font-size:10px; color:rgba(255,255,255,0.3); letter-spacing:2px; text-transform:uppercase; }
+        .em-card-num  { font-family:'Bebas Neue',sans-serif; font-size:26px; color:var(--yellow); letter-spacing:2px; display:block; margin-top:2px; }
+        .em-card-note { font-size:12px; color:rgba(255,255,255,0.3); margin-top:4px; }
+        .em-section-label { font-family:'Barlow Condensed',sans-serif; font-size:11px; letter-spacing:4px; text-transform:uppercase; color:rgba(255,255,255,0.3); margin-top:36px; margin-bottom:14px; padding-bottom:10px; border-bottom:1px solid rgba(255,255,255,0.08); grid-column:1/-1; }
+
+        /* MAP */
+        #map-section { padding:0; }
+        .map-wrapper { position:relative; }
+        .map-overlay-label { position:absolute; top:24px; left:24px; background:var(--black); color:white; padding:14px 22px; border-radius:4px; border-left:4px solid var(--red); z-index:10; pointer-events:none; }
+        .map-overlay-label h4 { font-family:'Bebas Neue',sans-serif; font-size:22px; letter-spacing:2px; }
+        .map-overlay-label p  { font-size:12px; color:rgba(255,255,255,0.5); margin-top:2px; }
+        .map-iframe { width:100%; height:450px; border:none; display:block; }
+
+        /* JOIN */
+        #join { padding:120px 0; background:linear-gradient(rgba(0,0,0,0.78),rgba(0,0,0,0.82)), url('https://images.unsplash.com/photo-1600880292203-757bb62b4baf?auto=format&fit=crop&w=1920&q=80') center/cover no-repeat; }
+        .join-inner { text-align:center; }
+        .join-inner h2 { font-size:clamp(44px,8vw,96px); margin:12px 0 24px; color:white; }
+        .join-inner p  { font-size:19px; color:rgba(255,255,255,0.65); max-width:560px; margin:0 auto 48px; line-height:1.6; }
+        .join-btn { display:inline-flex; align-items:center; gap:14px; background:var(--red); color:white; padding:22px 48px; font-family:'Bebas Neue',sans-serif; font-size:28px; letter-spacing:3px; text-decoration:none; border-radius:4px; transition:all 0.3s; }
+        .join-btn:hover { background:var(--yellow); color:var(--black); transform:translateY(-3px); }
+
+        /* FOOTER */
+        footer { background:var(--off-black); color:white; padding:80px 0 0; }
+        .footer-grid { display:grid; grid-template-columns:2fr 1fr 1fr 1fr; gap:48px; padding-bottom:60px; }
+        .footer-logo-row { display:flex; align-items:center; gap:12px; margin-bottom:20px; }
+        .footer-logo-badge { width:44px; height:44px; background:var(--red); border-radius:50%; display:flex; align-items:center; justify-content:center; font-family:'Bebas Neue',sans-serif; font-size:12px; color:white; letter-spacing:1px; border:2px solid var(--yellow); }
+        .footer-logo-name { font-family:'Bebas Neue',sans-serif; font-size:22px; letter-spacing:3px; }
+        .footer-brand p { font-size:14px; color:rgba(255,255,255,0.4); line-height:1.8; }
+        .footer-col h4 { font-family:'Barlow Condensed',sans-serif; font-size:11px; letter-spacing:3px; text-transform:uppercase; color:rgba(255,255,255,0.3); margin-bottom:20px; }
+        .footer-col ul { list-style:none; }
+        .footer-col li { margin-bottom:10px; }
+        .footer-col a  { color:rgba(255,255,255,0.6); text-decoration:none; font-size:14px; transition:color 0.2s; }
+        .footer-col a:hover { color:var(--yellow); }
+        .footer-contact-item { display:flex; align-items:center; gap:10px; margin-bottom:14px; }
+        .footer-contact-item i { color:var(--red); font-size:14px; width:16px; }
+        .footer-contact-item a, .footer-contact-item span { color:rgba(255,255,255,0.6); font-size:14px; text-decoration:none; transition:color 0.2s; }
+        .footer-contact-item a:hover { color:var(--yellow); }
+        .social-links { display:flex; gap:12px; margin-top:24px; }
+        .social-links a { width:40px; height:40px; background:rgba(255,255,255,0.07); border-radius:4px; display:flex; align-items:center; justify-content:center; color:rgba(255,255,255,0.5); font-size:16px; text-decoration:none; transition:all 0.25s; }
+        .social-links a:hover { background:var(--red); color:white; transform:translateY(-2px); }
+        .footer-bottom { border-top:1px solid rgba(255,255,255,0.06); padding:24px; text-align:center; font-size:12px; color:rgba(255,255,255,0.25); }
+
+        /* RESPONSIVE */
+        @media (max-width:1024px) { .footer-grid { grid-template-columns:1fr 1fr; } }
+        @media (max-width:900px) {
+            .nav-links { display:none; } .hamburger { display:block; }
+            .about-grid,.team-grid,.services-cards,.wa-layout,.init-grid,.concerns-inner,.coc-grid { grid-template-columns:1fr; }
+            .patrol-cards { grid-template-columns:1fr 1fr; }
+            .concerns-channels { justify-content:flex-start; }
+            .wa-icon-card { position:static; }
+        }
+        @media (max-width:600px) {
+            .patrol-cards,.services-cards,.about-photo-strip,.wa-rules-grid,.footer-grid { grid-template-columns:1fr; }
+            .hero-stats { gap:24px; } .hero-buttons { flex-direction:column; }
+            .nav-inner { padding:12px 16px; } .hero-content { padding:60px 16px; }
+            .about-photo-strip img { margin-top:0!important; height:160px; }
+            .map-iframe { height:320px; }
+            #panic-btn { bottom:100px; right:16px; width:60px; height:60px; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- PANIC BUTTON -->
+<button id="panic-btn" onclick="openPanic()" title="Send Emergency Alert to NHW">
+    <i class="fa-solid fa-bell"></i>
+    <span>PANIC</span>
+</button>
+
+<!-- PANIC MODAL -->
+<div id="panic-modal">
+    <div class="panic-box">
+        <div class="panic-icon"><i class="fa-solid fa-triangle-exclamation"></i></div>
+        <h2>EMERGENCY ALERT</h2>
+        <p>Choose how to contact Newclair NHW or emergency services immediately. Your message will include your location details.</p>
+        <div class="panic-actions">
+            <a href="https://wa.me/?text=🚨%20EMERGENCY%20ALERT!%20I%20need%20immediate%20assistance%20in%20New%20Claire%2C%20Malmesbury.%20Please%20respond%20URGENTLY!%20-%20Newclair%20NHW%20Member"
+               class="panic-action-btn whatsapp" target="_blank" onclick="closePanic()">
+                <i class="fa-brands fa-whatsapp"></i>
+                WhatsApp NHW — URGENT MESSAGE
+            </a>
+            <a href="tel:10111" class="panic-action-btn call" onclick="closePanic()">
+                <i class="fa-solid fa-phone"></i>
+                Call SAPS Emergency — 10111
+            </a>
+            <a href="mailto:newclair.nhw@gmail.com?subject=🚨 EMERGENCY ALERT&body=EMERGENCY: I need immediate assistance in New Claire, Malmesbury. Please respond URGENTLY. My location: " class="panic-action-btn sms" onclick="closePanic()">
+                <i class="fa-solid fa-envelope"></i>
+                Email NHW Emergency Alert
+            </a>
+        </div>
+        <button class="panic-close" onclick="closePanic()">CANCEL — I AM SAFE</button>
+    </div>
+</div>
+
+<!-- ADD TO HOME SCREEN BANNER -->
+<div id="a2hs-banner">
+    <div class="a2hs-icon">NHW</div>
+    <div class="a2hs-text">
+        <strong>Add Newclair NHW to your home screen</strong>
+        <span>Quick access to emergency numbers &amp; panic button</span>
+    </div>
+    <button class="a2hs-btn" id="a2hs-install">ADD TO HOME</button>
+    <button class="a2hs-close" onclick="dismissA2HS()"><i class="fa-solid fa-xmark"></i></button>
+</div>
+
+<!-- ALERT BANNER -->
+<div class="alert-banner">
+    🛡️ OFFICIALLY ACCREDITED BY THE WESTERN CAPE DEPARTMENT OF POLICE OVERSIGHT AND COMMUNITY SAFETY — 15 OCTOBER 2025
+</div>
+
+<!-- NAVBAR -->
+<nav id="mainNav">
+    <div class="nav-inner">
+        <a href="#" class="nav-logo">
+            <img src="logo.png" alt="Newclair NHW Logo" style="height:46px;width:auto;object-fit:contain;">
+        </a>
+        <ul class="nav-links">
+            <li><a href="#about">ABOUT</a></li>
+            <li><a href="#team">TEAM & PATROLS</a></li>
+            <li><a href="#services">SERVICES</a></li>
+            <li><a href="#coc">CODE OF CONDUCT</a></li>
+            <li><a href="#whatsapp">WHATSAPP RULES</a></li>
+            <li><a href="#initiatives">INITIATIVES</a></li>
+            <li><a href="#emergency">EMERGENCY</a></li>
+            <li><a href="#map-section">MAP</a></li>
+            <li><a href="#contact">CONTACT</a></li>
+            <li><a href="#join" class="nav-cta"><i class="fa-solid fa-shield-halved"></i> JOIN NOW</a></li>
+        </ul>
+        <button class="hamburger" onclick="toggleMenu()" aria-label="Menu">
+            <i class="fa-solid fa-bars" id="ham-icon"></i>
+        </button>
+    </div>
+    <div class="mobile-menu" id="mobileMenu">
+        <a href="#about"       onclick="closeMenu()">ABOUT</a>
+        <a href="#team"        onclick="closeMenu()">TEAM & PATROLS</a>
+        <a href="#services"    onclick="closeMenu()">SERVICES / DATABASE</a>
+        <a href="#coc"         onclick="closeMenu()">CODE OF CONDUCT</a>
+        <a href="#whatsapp"    onclick="closeMenu()">WHATSAPP GROUP RULES</a>
+        <a href="#initiatives" onclick="closeMenu()">INITIATIVES</a>
+        <a href="#emergency"   onclick="closeMenu()">EMERGENCY NUMBERS</a>
+        <a href="#map-section" onclick="closeMenu()">MAP OF NEW CLAIRE</a>
+        <a href="#contact"     onclick="closeMenu()">CONTACT</a>
+        <a href="#join"        onclick="closeMenu()" style="color:var(--yellow)">⬡ JOIN NOW</a>
+    </div>
+</nav>
+
+<!-- HERO -->
+<header class="hero">
+    <div class="hero-bg" id="heroBg"></div>
+    <div class="hero-pattern"></div>
+    <div class="hero-red-bar"></div>
+    <div class="hero-content container">
+        <div class="hero-accred">
+            <img src="wc.png" alt="Western Cape Government">
+            <div class="hero-accred-text">
+                <strong>OFFICIALLY ACCREDITED</strong>
+                <span>Western Cape Government · 15 October 2025</span>
+            </div>
+        </div>
+        <h1 class="hero-title">NEW<br><span class="accent">CLAIRE</span></h1>
+        <p class="hero-subtitle">Neighbourhood Watch · Malmesbury</p>
+        <p class="hero-tagline">Protecting our community together — because safety is everyone's responsibility.</p>
+        <div class="hero-buttons">
+            <a href="#join"     class="btn-primary"><i class="fa-solid fa-shield-halved"></i> JOIN THE WATCH</a>
+            <a href="#services" class="btn-secondary"><i class="fa-solid fa-clipboard-list"></i> LOG AN INCIDENT</a>
+        </div>
+        <div class="hero-stats">
+            <div class="stat-item"><div class="stat-num" data-target="43">0</div><div class="stat-label">Active Members</div></div>
+            <div class="stat-item"><div class="stat-num" data-target="2020" data-suffix="">2020</div><div class="stat-label">been Quietly Active</div></div>
+            <div class="stat-item"><div class="stat-num" data-static="24/7">24/7</div><div class="stat-label">Community Watch</div></div>
+        </div>
+    </div>
+</header>
+
+<!-- ABOUT -->
+<section id="about">
+    <div class="container">
+        <div class="about-grid">
+            <div class="about-left reveal-left">
+                <span class="section-tag">WHO WE ARE</span>
+                <h2 class="display-heading about-heading">NEW CLAIRE NHW</h2>
+                <img src="men.jpg" alt="Community members working together" class="about-img">
+                <div class="about-text">
+                    <p>The objective of NHW is for neighbours to work together to prevent crime and therefore create a safe and friendly environment where crime is less likely to happen.</p>
+                    <p>The main function of NHW is based on creating a local network of neighbours who help each other, keep an eye on each other, keep an eye on communal spaces, and keep an eye on their immediate environment.</p>
+                    <p>By increasing the number of people working together to increase the level of supervision of homes and their environment — this is an effective means of combating burglary, theft and vandalism.</p>
+                </div>
+            </div>
+            <div class="about-right reveal-right">
+                <h3>AIMS OF NHW</h3>
+                <ul class="aim-list">
+                    <li>Increasing communication and knowledge amongst neighbours</li>
+                    <li>Helping to prevent crime</li>
+                    <li>Helping to develop community spirit</li>
+                    <li>Providing a visible sign that residents care about their community</li>
+                    <li>Encouraging reporting of suspicious activity</li>
+                    <li>Improving personal and home security</li>
+                </ul>
+                <div class="divider"></div>
+                <h3>BENEFITS OF NHW</h3>
+                <ul class="benefit-list">
+                    <li>Demonstrates community spirit</li>
+                    <li>Prevents crime</li>
+                    <li>Reduces fear of crime</li>
+                    <li>Shows people care about their neighbourhood</li>
+                </ul>
+            </div>
+        </div>
+            </div>
+</section>
+
+<!-- ACCRED BAND -->
+<div class="accred-band reveal">
+    <div class="accred-inner container">
+        
+        <div class="accred-text">
+            <h3>OFFICIALLY ACCREDITED — 15 OCTOBER 2025</h3>
+            <p>Accredited by the Western Cape Department of Police Oversight and Community Safety in terms of the Western Cape Community Safety Act, 2013 (Act 3 of 2013)</p>
+        </div>
+    </div>
+</div>
+
+<!-- TEAM -->
+<section id="team">
+    <div class="container">
+        <div class="team-grid">
+            <div class="team-visual reveal-left">
+                <img src="logo_l.jpg" alt="Newclair NHW patrol team" class="team-photo">
+                <div class="team-number-bg">
+                    <span class="team-big-number">43+</span>
+                    <p class="team-number-label">Active Members Including Executive Committee</p>
+                </div>
+                <div class="vest-feature">
+                    <i class="fa-solid fa-vest" style="font-size:20px;"></i>
+                    All patrollers wear official yellow safety vests &amp; caps
+                </div>
+            </div>
+            <div class="team-info reveal-right">
+                <span class="section-tag">TEAM & PATROLS</span>
+                <h2 class="display-heading">OUR DEDICATED<br>PATROL TEAM</h2>
+                <p>Newclair NHW has 43+ active members including our executive committee. Regular patrols are conducted within the perimeter of our area. All volunteers receive official yellow safety vests and caps.</p>
+                <div class="patrol-cards">
+                    <div class="patrol-card"><i class="fa-solid fa-person-walking"></i><h4>FOOT PATROLS</h4><p>Regular on-ground foot patrols throughout the New Claire neighbourhood.</p></div>
+                    <div class="patrol-card"><i class="fa-solid fa-car-side"></i><h4>VEHICLE PATROLS</h4><p>Mobile vehicle patrols covering the wider New Claire area.</p></div>
+                    <div class="patrol-card"><i class="fa-solid fa-eye"></i><h4>AREA MONITORING</h4><p>Members keep watch over communal spaces and suspicious activity.</p></div>
+                    <div class="patrol-card"><i class="fa-solid fa-handshake"></i><h4>SAPS PARTNERSHIP</h4><p>Working alongside South African Police Service for effective coverage.</p></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- SERVICES -->
+<section id="services">
+    <div class="container">
+        <div class="services-header reveal">
+            <span class="section-tag" style="text-align:center;">SERVICES & DATABASE</span>
+            <h2 class="display-heading services-heading">NHW SERVICES</h2>
+            <p class="services-sub">You must be registered with NHW to access full services</p>
+        </div>
+        <div class="services-cards">
+            <a href="https://docs.google.com/forms/d/e/1FAIpQLSfqc8lI63Bn58aYFMLbl0Ji5lcLSf2J45zoZr73kgLx2cqXmA/viewform?usp=sf_link" target="_blank" rel="noopener noreferrer" class="service-card black reveal-left">
+                <i class="fa-solid fa-user-plus"></i>
+                <h4>REGISTER WITH NEWCLAIR NHW</h4>
+                <p>Click here to join the Neighbourhood Watch and become part of our community safety network.</p>
+            </a>
+            <a href="https://docs.google.com/forms/d/e/1FAIpQLSf6zLAH7-iAbTtEasQTgPog5f29aVbHFyxezfOv4I-whBcMAA/viewform?usp=sf_link" target="_blank" rel="noopener noreferrer" class="service-card red reveal-right">
+                <i class="fa-solid fa-clipboard-list"></i>
+                <h4>LOG INCIDENT OR PATROL REPORT</h4>
+                <p>Submit a report or patrol log instantly. Help us keep accurate records of incidents in our area.</p>
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- CODE OF CONDUCT -->
+<section id="coc">
+    <div class="container">
+        <div class="coc-header reveal">
+            <span class="section-tag" style="color:var(--yellow);text-align:center;">GOVERNANCE</span>
+            <h2 class="display-heading coc-heading">CODE OF CONDUCT</h2>
+            <p>This Code of Conduct is issued in terms of Regulation 4(2)(r) of the Western Cape Community Safety Act, 2013 (Act 3 of 2013). All members must pledge adherence.</p>
+        </div>
+        <div class="coc-grid">
+            <div class="coc-block reveal"><div class="coc-block-num">01</div><h4>Introduction</h4><ol>
+                <li>A neighbourhood watch (NHW) must operate as the eyes and ears of the community it serves and must cooperate with SAPS.</li>
+                <li>A NHW must assist SAPS and other safety services to safeguard the local community and their property.</li>
+                <li>This Code of Conduct is binding on all members. Members must pledge adherence.</li>
+                <li>By pledging adherence, a member acknowledges the risks involved in NHW activities.</li>
+            </ol></div>
+            <div class="coc-block reveal" style="transition-delay:0.1s"><div class="coc-block-num">02</div><h4>Conduct of Members</h4><ol>
+                <li>A member must at all times act in accordance with the Constitution of South Africa and uphold the aims of the NHW.</li>
+                <li>A member may not discriminate unfairly or bring the NHW into disrepute.</li>
+                <li>A member may not exploit membership for personal gain or accept unauthorised payment.</li>
+                <li>Members must treat all community members with dignity and respect at all times.</li>
+            </ol></div>
+            <div class="coc-block reveal" style="transition-delay:0.2s"><div class="coc-block-num">03</div><h4>Duties When Patrolling</h4><ol>
+                <li>When patrolling, members must alert SAPS where possible and work in partnership with them.</li>
+                <li>Members must carry identification cards and obey lawful instructions from police.</li>
+                <li>Members must report suspicious activity to the control room and SAPS immediately.</li>
+                <li>No vigilantism or intimidation is permitted under any circumstances.</li>
+            </ol></div>
+        </div>
+        <div class="coc-warning reveal">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+            <p><strong>Disciplinary Measures:</strong> Any breach of this Code of Conduct may result in the immediate termination of NHW membership. All members are expected to uphold these standards at all times to maintain the integrity of our neighbourhood watch.</p>
+        </div>
+    </div>
+</section>
+
+<!-- WHATSAPP RULES -->
+<section id="whatsapp">
+    <div class="container">
+        <div class="wa-header reveal">
+            <span class="section-tag" style="text-align:center;">COMMUNICATION</span>
+            <h2 class="display-heading wa-heading">WHATSAPP GROUP RULES</h2>
+            <p class="wa-sub">You must be registered with NHW to be added. Please read and accept the rules below before joining.</p>
+        </div>
+        <div class="wa-layout">
+            <div class="wa-icon-card reveal-left">
+                <i class="fa-brands fa-whatsapp"></i>
+                <h3>NEWCLAIR NHW GROUP</h3>
+                <p>Our WhatsApp group is for residents of New Claire, Malmesbury ONLY. Stay on topic and help keep our community safe.</p>
+                <br><p style="font-size:12px;opacity:0.7;">Contact us to be added once you are registered.</p>
+            </div>
+            <div class="wa-rules-grid reveal-right">
+                <div class="wa-rule"><span class="wa-rule-num">01</span><span class="wa-rule-text">You may not post content that infringes or violates someone else's rights or otherwise violates the law.</span></div>
+                <div class="wa-rule"><span class="wa-rule-num">02</span><span class="wa-rule-text">You may not use the WhatsApp group to do anything unlawful, misleading, malicious, or discriminatory.</span></div>
+                <div class="wa-rule"><span class="wa-rule-num">03</span><span class="wa-rule-text">You are solely responsible for your conduct and any content you submit. You may receive a warning or be removed.</span></div>
+                <div class="wa-rule"><span class="wa-rule-num">04</span><span class="wa-rule-text">You may not abuse, harass, threaten, impersonate or intimidate any other users.</span></div>
+                <div class="wa-rule"><span class="wa-rule-num">05</span><span class="wa-rule-text">You are responsible for any activity that occurs under your screen name.</span></div>
+                <div class="wa-rule"><span class="wa-rule-num">06</span><span class="wa-rule-text">Always keep to the purpose of the group! Do not share irrelevant messages — this is a safety group, not a general chat.</span></div>
+                <div class="wa-rule"><span class="wa-rule-num">07</span><span class="wa-rule-text">Post your message in one single chunk of text. Do not send multiple short messages in a row.</span></div>
+                <div class="wa-rule"><span class="wa-rule-num">08</span><span class="wa-rule-text">Do not have one-on-one conversations in the group. Switch to private messages for personal discussions.</span></div>
+                <div class="wa-rule"><span class="wa-rule-num">09</span><span class="wa-rule-text">If someone asks a question and you do not know the answer, just wait for someone who knows. Do not guess.</span></div>
+                <div class="wa-rule"><span class="wa-rule-num">10</span><span class="wa-rule-text">Please do not send a hundred "thank you" messages. Use private messages for appreciation.</span></div>
+                <div class="wa-rule"><span class="wa-rule-num">11</span><span class="wa-rule-text">Don't add random people — only for residents living within the New Claire Malmesbury area.</span></div>
+                <div class="wa-rule"><span class="wa-rule-num">12</span><span class="wa-rule-text">Before posting, ask yourself: Is this relevant? Is this necessary? If unsure, don't post it.</span></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- INITIATIVES -->
+<section id="initiatives">
+    <div class="container">
+        <div class="init-header reveal">
+            <span class="section-tag" style="color:var(--yellow);text-align:center;">COMMUNITY WORK</span>
+            <h2 class="display-heading init-heading" style="color:white;">OUR INITIATIVES</h2>
+        </div>
+        <div class="init-grid">
+            <div class="signage-block reveal-left">
+                <p class="signage-label">Residential Visibility</p>
+                <h3>RESIDENTIAL SIGNAGE</h3>
+                <p>To promote greater visibility and awareness, a Neighbourhood Watch sign will be installed at the residences of all patrolling members. This serves as a visible deterrent and shows the community is actively protected.</p>
+                <img src="3.png" alt="Neighbourhood Watch signage" style="width:100%;height:180px;object-fit:cover;border-radius:4px;margin-bottom:20px;border-left:6px solid var(--red);">
+                <div class="sign-preview">
+                    <div class="sign-preview-logo">NHW</div>
+                    <div class="sign-preview-text">
+                        <h4>NEWCLAIR NEIGHBOURHOOD WATCH</h4>
+                        <p>THIS AREA IS MONITORED · newclair.nhw@gmail.com</p>
+                    </div>
+                </div>
+            </div>
+            <div class="muni-block reveal-right">
+                <div class="muni-logo-row">
+                    <div class="muni-logo-text">
+                        <h4>SWARTLAND</h4>
+                        <p>MUNISIPALITEIT · MUNICIPALITY · UMASIPALA</p>
+                    </div>
+                </div>
+                <p>Since July, the Newclair Neighbourhood Watch has been in contact with the local municipality to address several problem areas within our community. Some of the concerns currently on the waiting list include:</p>
+                <ul class="muni-list">
+                    <li class="muni-item"><span class="muni-num">01</span><span class="muni-text">Improving lighting in and around the cemetery</span></li>
+                    <li class="muni-item"><span class="muni-num">02</span><span class="muni-text">Trimming trees along the cemetery fence</span></li>
+                    <li class="muni-item"><span class="muni-num">03</span><span class="muni-text">Removal of unwanted structures within the cemetery</span></li>
+                    <li class="muni-item"><span class="muni-num">04</span><span class="muni-text">Attending to non-residential plots with overgrown trees and bushes</span></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="concerns-band">
+        <div class="concerns-inner">
+            <div class="concerns-text reveal-left">
+                <h3>DO YOU HAVE ANY CONCERNS?</h3>
+                <p>We urge all residents to report any security concerns, crime incidents, or safety-related matters to the Newclair Neighbourhood Watch via our WhatsApp group or Facebook page.</p>
+            </div>
+            <div class="concerns-channels reveal-right">
+                <a href="https://www.facebook.com/groups/694374599623485" target="_blank" rel="noopener noreferrer" class="channel-btn fb">
+                    <i class="fa-brands fa-facebook"></i> FACEBOOK GROUP
+                </a>
+                <a href="mailto:newclair.nhw@gmail.com" class="channel-btn" style="background:#0a0a0a;color:white;">
+                    <i class="fa-solid fa-envelope"></i> EMAIL US
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- EMERGENCY NUMBERS -->
+<section id="emergency">
+    <div class="container">
+        <div class="emergency-header reveal">
+            <span class="section-tag" style="color:var(--yellow);text-align:center;">SAFETY CONTACTS</span>
+            <h2 class="display-heading emergency-heading">EMERGENCY NUMBERS</h2>
+            <p>Tap any number to call immediately. Save these contacts to your phone.</p>
+        </div>
+        <div class="emergency-grid">
+
+            <div class="em-section-label">🚨 NATIONAL EMERGENCY SERVICES</div>
+            <a href="tel:10111" class="em-card reveal"><div class="em-card-top"><div class="em-card-icon police"><i class="fa-solid fa-shield-halved"></i></div><div><div class="em-card-name">SAPS Police</div><div class="em-card-cat">National Emergency</div></div></div><span class="em-card-num">10111</span><div class="em-card-note">South African Police Service — 24/7</div></a>
+            <a href="tel:10177" class="em-card reveal"><div class="em-card-top"><div class="em-card-icon medical"><i class="fa-solid fa-truck-medical"></i></div><div><div class="em-card-name">Ambulance</div><div class="em-card-cat">Medical Emergency</div></div></div><span class="em-card-num">10177</span><div class="em-card-note">National Ambulance — 24/7</div></a>
+            <a href="tel:112" class="em-card reveal"><div class="em-card-top"><div class="em-card-icon medical"><i class="fa-solid fa-mobile-screen"></i></div><div><div class="em-card-name">Mobile Emergency</div><div class="em-card-cat">All Networks</div></div></div><span class="em-card-num">112</span><div class="em-card-note">Works on all networks, even without airtime</div></a>
+            <a href="tel:0215114000" class="em-card reveal"><div class="em-card-top"><div class="em-card-icon fire"><i class="fa-solid fa-fire-extinguisher"></i></div><div><div class="em-card-name">Fire & Rescue</div><div class="em-card-cat">Western Cape</div></div></div><span class="em-card-num">021 511 4000</span><div class="em-card-note">Western Cape Fire & Rescue Services</div></a>
+            <a href="tel:0860010111" class="em-card reveal"><div class="em-card-top"><div class="em-card-icon crime"><i class="fa-solid fa-user-secret"></i></div><div><div class="em-card-name">Crime Stop</div><div class="em-card-cat">Anonymous Tips</div></div></div><span class="em-card-num">0860 010 111</span><div class="em-card-note">Report crime anonymously — 24/7 free</div></a>
+            <a href="tel:0800111213" class="em-card reveal"><div class="em-card-top"><div class="em-card-icon crime"><i class="fa-solid fa-people-group"></i></div><div><div class="em-card-name">GBV Command Centre</div><div class="em-card-cat">Gender-Based Violence</div></div></div><span class="em-card-num">0800 111 213</span><div class="em-card-note">Free 24/7 Gender-Based Violence hotline</div></a>
+
+            <div class="em-section-label">🏛️ LOCAL MALMESBURY SERVICES</div>
+            <a href="tel:0227482500" class="em-card reveal"><div class="em-card-top"><div class="em-card-icon police"><i class="fa-solid fa-building"></i></div><div><div class="em-card-name">Malmesbury SAPS</div><div class="em-card-cat">Local Police Station</div></div></div><span class="em-card-num">022 748 2500</span><div class="em-card-note">Malmesbury Police Station</div></a>
+            <a href="tel:0227432084" class="em-card reveal"><div class="em-card-top"><div class="em-card-icon medical"><i class="fa-solid fa-hospital"></i></div><div><div class="em-card-name">Swartland Hospital</div><div class="em-card-cat">Medical</div></div></div><span class="em-card-num">022 743 2084</span><div class="em-card-note">Swartland District Hospital, Malmesbury</div></a>
+            <a href="tel:0227481111" class="em-card reveal"><div class="em-card-top"><div class="em-card-icon fire"><i class="fa-solid fa-city"></i></div><div><div class="em-card-name">Swartland Municipality</div><div class="em-card-cat">Municipal Emergency</div></div></div><span class="em-card-num">022 748 1111</span><div class="em-card-note">Swartland Municipality — General line</div></a>
+
+            <div class="em-section-label">🔐 SECURITY COMPANIES — MALMESBURY AREA</div>
+            <a href="tel:0860123000" class="em-card reveal"><div class="em-card-top"><div class="em-card-icon security"><i class="fa-solid fa-shield"></i></div><div><div class="em-card-name">ADT Security</div><div class="em-card-cat">Armed Response</div></div></div><span class="em-card-num">0860 123 000</span><div class="em-card-note">ADT Armed Response — 24/7 National</div></a>
+            <a href="tel:0861003111" class="em-card reveal"><div class="em-card-top"><div class="em-card-icon security"><i class="fa-solid fa-lock"></i></div><div><div class="em-card-name">Fidelity Security</div><div class="em-card-cat">Armed Response</div></div></div><span class="em-card-num">0861 003 111</span><div class="em-card-note">Fidelity Services Group — 24/7</div></a>
+            <a href="tel:0800706050" class="em-card reveal"><div class="em-card-top"><div class="em-card-icon security"><i class="fa-solid fa-user-shield"></i></div><div><div class="em-card-name">G4S Security</div><div class="em-card-cat">Armed Response</div></div></div><span class="em-card-num">0800 70 60 50</span><div class="em-card-note">G4S Secure Solutions — 24/7</div></a>
+            <a href="tel:0861773266" class="em-card reveal"><div class="em-card-top"><div class="em-card-icon security"><i class="fa-solid fa-shield-halved"></i></div><div><div class="em-card-name">Bidvest Protea Coin</div><div class="em-card-cat">Security Services</div></div></div><span class="em-card-num">0861 773 266</span><div class="em-card-note">Bidvest Protea Coin — 24/7</div></a>
+            <a href="tel:0214835000" class="em-card reveal"><div class="em-card-top"><div class="em-card-icon security"><i class="fa-solid fa-eye"></i></div><div><div class="em-card-name">Securitas SA</div><div class="em-card-cat">Security Services</div></div></div><span class="em-card-num">021 483 5000</span><div class="em-card-note">Securitas Western Cape</div></a>
+            <a href="tel:0861227264" class="em-card reveal"><div class="em-card-top"><div class="em-card-icon security"><i class="fa-solid fa-walkie-talkie"></i></div><div><div class="em-card-name">SWC Security</div><div class="em-card-cat">Western Cape Region</div></div></div><span class="em-card-num">0861 227 264</span><div class="em-card-note">SWC Security — Western Cape</div></a>
+
+            <div class="em-section-label">📍 NEWCLAIR NHW CONTACT</div>
+            <a href="mailto:newclair.nhw@gmail.com" class="em-card reveal" style="border-left-color:var(--yellow)"><div class="em-card-top"><div class="em-card-icon" style="background:#1a1a00;color:var(--yellow)"><i class="fa-solid fa-envelope"></i></div><div><div class="em-card-name">Newclair NHW Email</div><div class="em-card-cat">Non-Emergency Reports</div></div></div><span class="em-card-num" style="font-size:17px;letter-spacing:0">newclair.nhw@gmail.com</span><div class="em-card-note">For non-emergency reports and enquiries</div></a>
+            <a href="https://www.facebook.com/groups/694374599623485" target="_blank" rel="noopener noreferrer" class="em-card reveal" style="border-left-color:#1877f2"><div class="em-card-top"><div class="em-card-icon" style="background:#0a1a3a;color:#7fa7e8"><i class="fa-brands fa-facebook-f"></i></div><div><div class="em-card-name">Facebook Community</div><div class="em-card-cat">Updates & Alerts</div></div></div><span class="em-card-num" style="font-size:17px;letter-spacing:0">Newclair NHW Group</span><div class="em-card-note">Follow for community updates and alerts</div></a>
+        </div>
+    </div>
+</section>
+
+<!-- GOOGLE MAP -->
+<section id="map-section">
+    <div class="map-wrapper reveal">
+        <div class="map-overlay-label">
+            <h4>📍 NEW CLAIRE, MALMESBURY</h4>
+            <p>Our patrol area — Western Cape, 7300</p>
+        </div>
+        <iframe
+            class="map-iframe"
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d13242.12!2d18.7166!3d-33.4646!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x1dcc22e06e3f3003%3A0x51dde2dfe3a0e55d!2sMalmesbury%2C%207300!5e0!3m2!1sen!2sza!4v1700000000001!5m2!1sen!2sza"
+            allowfullscreen=""
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"
+            title="New Claire, Malmesbury — Newclair NHW Patrol Area">
+        </iframe>
+    </div>
+</section>
+
+<!-- JOIN -->
+<section id="join">
+    <div class="container">
+        <div class="join-inner reveal">
+            <span class="section-tag" style="color:var(--yellow);text-align:center;">GET INVOLVED</span>
+            <h2 class="display-heading">BECOME PART<br>OF THE SOLUTION</h2>
+            <p>Join the Newclair Neighbourhood Watch today and help make our community safer for everyone. Registration is free and open to all residents of New Claire, Malmesbury.</p>
+            <a href="https://docs.google.com/forms/d/e/1FAIpQLSfqc8lI63Bn58aYFMLbl0Ji5lcLSf2J45zoZr73kgLx2cqXmA/viewform?usp=sf_link" target="_blank" rel="noopener noreferrer" class="join-btn">
+                <i class="fa-solid fa-shield-halved"></i>
+                REGISTER TO JOIN NEWCLAIR NHW
+                <i class="fa-solid fa-arrow-right"></i>
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- FOOTER -->
+<footer id="contact">
+    <div class="container">
+        <div class="footer-grid">
+            <div class="footer-brand reveal-left">
+                <div class="footer-logo-row">
+<img src="logo1.png" alt="Newclair NHW Logo" style="height:46px;width:auto;object-fit:contain;">
+                    
+                    <span class="footer-logo-name">NEWCLAIR NHW</span>
+                </div>
+                <p>Accredited Neighbourhood Watch<br>New Claire, Malmesbury, 7300<br>Western Cape, South Africa</p>
+                <p style="margin-top:12px;">Accredited by the Western Cape Department of Police Oversight and Community Safety · 15 October 2025</p>
+                <div class="social-links">
+                    <a href="https://www.facebook.com/groups/694374599623485" target="_blank" rel="noopener noreferrer" title="Facebook Group"><i class="fa-brands fa-facebook-f"></i></a>
+                    <a href="mailto:newclair.nhw@gmail.com" title="Email Us"><i class="fa-solid fa-envelope"></i></a>
+                </div>
+            </div>
+            <div class="footer-col reveal">
+                <h4>CONTACT</h4>
+                <div class="footer-contact-item"><i class="fa-solid fa-envelope"></i><a href="mailto:newclair.nhw@gmail.com">newclair.nhw@gmail.com</a></div>
+                <div class="footer-contact-item"><i class="fa-brands fa-facebook"></i><a href="https://www.facebook.com/groups/694374599623485" target="_blank" rel="noopener noreferrer">Facebook Group</a></div>
+                <div class="footer-contact-item"><i class="fa-solid fa-location-dot"></i><span>New Claire, Malmesbury, 7300</span></div>
+            </div>
+            <div class="footer-col reveal">
+                <h4>QUICK LINKS</h4>
+                <ul>
+                    <li><a href="#about">About Us</a></li>
+                    <li><a href="#team">Team & Patrols</a></li>
+                    <li><a href="#services">Register / Log Incident</a></li>
+                    <li><a href="#coc">Code of Conduct</a></li>
+                    <li><a href="#whatsapp">WhatsApp Group Rules</a></li>
+                    <li><a href="#initiatives">Initiatives</a></li>
+                    <li><a href="#emergency">Emergency Numbers</a></li>
+                    <li><a href="#map-section">Map of New Claire</a></li>
+                </ul>
+            </div>
+            <div class="footer-col reveal-right">
+                <h4>QUICK DIAL</h4>
+                <div class="footer-contact-item"><i class="fa-solid fa-phone"></i><a href="tel:10111">SAPS: 10111</a></div>
+                <div class="footer-contact-item"><i class="fa-solid fa-phone"></i><a href="tel:10177">Ambulance: 10177</a></div>
+                <div class="footer-contact-item"><i class="fa-solid fa-phone"></i><a href="tel:112">Mobile Emergency: 112</a></div>
+                <div class="footer-contact-item"><i class="fa-solid fa-phone"></i><a href="tel:0860010111">Crime Stop: 0860 010 111</a></div>
+                <div class="footer-contact-item"><i class="fa-solid fa-phone"></i><a href="tel:0227482500">Malmesbury SAPS: 022 748 2500</a></div>
+            </div>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        © 2025 Newclair Neighbourhood Watch · All Rights Reserved · New Claire, Malmesbury, Western Cape · Made with pride for our community
+    </div>
+</footer>
+
+<script>
+    /* Mobile Menu */
+    function toggleMenu() {
+        const m = document.getElementById('mobileMenu'), i = document.getElementById('ham-icon');
+        m.classList.toggle('open');
+        i.className = m.classList.contains('open') ? 'fa-solid fa-xmark' : 'fa-solid fa-bars';
+    }
+    function closeMenu() {
+        const m = document.getElementById('mobileMenu'), i = document.getElementById('ham-icon');
+        m.classList.remove('open'); i.className = 'fa-solid fa-bars';
+    }
+
+    /* Smooth Scroll */
+    document.querySelectorAll('a[href^="#"]').forEach(a => {
+        a.addEventListener('click', function(e) {
+            const h = this.getAttribute('href');
+            if (h.length > 1) {
+                e.preventDefault();
+                const t = document.querySelector(h);
+                if (t) { const nav = document.querySelector('nav').offsetHeight; window.scrollTo({ top: t.getBoundingClientRect().top + window.scrollY - nav - 8, behavior:'smooth' }); closeMenu(); }
+            }
+        });
+    });
+
+    /* Sticky Nav */
+    window.addEventListener('scroll', () => document.getElementById('mainNav').classList.toggle('scrolled', window.scrollY > 60));
+
+    /* Hero bg zoom in */
+    setTimeout(() => document.getElementById('heroBg').classList.add('loaded'), 100);
+
+    /* Scroll Reveal */
+    const ro = new IntersectionObserver(entries => {
+        entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); ro.unobserve(e.target); } });
+    }, { threshold: 0.08 });
+    document.querySelectorAll('.reveal, .reveal-left, .reveal-right').forEach(el => ro.observe(el));
+
+    /* Panic */
+    function openPanic() { document.getElementById('panic-modal').classList.add('open'); document.body.style.overflow = 'hidden'; }
+    function closePanic() { document.getElementById('panic-modal').classList.remove('open'); document.body.style.overflow = ''; }
+    document.getElementById('panic-modal').addEventListener('click', e => { if (e.target === document.getElementById('panic-modal')) closePanic(); });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closePanic(); });
+
+    /* Add to Home Screen */
+    let deferredPrompt = null;
+    window.addEventListener('beforeinstallprompt', e => {
+        e.preventDefault(); deferredPrompt = e;
+        if (window.innerWidth <= 900 && !sessionStorage.getItem('a2hs-dismissed')) {
+            document.getElementById('a2hs-banner').classList.add('show');
+        }
+    });
+    document.getElementById('a2hs-install').addEventListener('click', async () => {
+        if (deferredPrompt) { deferredPrompt.prompt(); await deferredPrompt.userChoice; deferredPrompt = null; }
+        document.getElementById('a2hs-banner').classList.remove('show');
+    });
+    function dismissA2HS() { document.getElementById('a2hs-banner').classList.remove('show'); sessionStorage.setItem('a2hs-dismissed','1'); }
+
+    /* iOS A2HS hint */
+    if (/iphone|ipad|ipod/i.test(navigator.userAgent) && !window.navigator.standalone && !sessionStorage.getItem('a2hs-dismissed') && window.innerWidth <= 900) {
+        const b = document.getElementById('a2hs-banner');
+        b.querySelector('.a2hs-text strong').textContent = 'Add to your home screen';
+        b.querySelector('.a2hs-text span').textContent = 'Tap Share → Add to Home Screen';
+        b.querySelector('#a2hs-install').textContent = 'HOW TO ADD';
+        b.querySelector('#a2hs-install').onclick = () => { alert('On iPhone/iPad:\n1. Tap the Share button (box with arrow)\n2. Scroll down and tap "Add to Home Screen"\n3. Tap "Add"'); };
+        b.classList.add('show');
+    }
+
+    /* Counter animation for stats */
+    const counters = document.querySelectorAll('[data-target]');
+    const counterObserver = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const el = entry.target;
+                const target = parseInt(el.dataset.target);
+                const duration = 1800;
+                const step = target / (duration / 16);
+                let current = 0;
+                const timer = setInterval(() => {
+                    current += step;
+                    if (current >= target) { el.textContent = target + (el.dataset.suffix || '+'); clearInterval(timer); }
+                    else { el.textContent = Math.floor(current) + '+'; }
+                }, 16);
+                counterObserver.unobserve(el);
+            }
+        });
+    }, { threshold: 0.5 });
+    counters.forEach(c => counterObserver.observe(c));
+
+</script>
+</body>
+</html>
